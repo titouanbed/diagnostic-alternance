@@ -1,0 +1,414 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#0f0f0f;--white:#fafaf8;--gray-200:#e4e2dc;--gray-400:#a8a49a;--gray-600:#6b6760;--gray-800:#2e2c28;--accent:#1a3a2a;--accent-light:#e8f0eb;--accent-mid:#4a7c5e;--danger:#8b2020;--danger-light:#fdf0f0;--success-light:#e8f0eb;--radius:2px;--t:220ms ease}
+html{font-size:16px}
+body{font-family:'DM Sans',sans-serif;font-weight:400;background:var(--white);color:var(--black);min-height:100vh;line-height:1.6}
+.header{border-bottom:1px solid var(--gray-200);padding:20px 0;position:sticky;top:0;background:var(--white);z-index:100}
+.header-inner{max-width:760px;margin:0 auto;padding:0 32px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'DM Serif Display',serif;font-size:15px;color:var(--black)}
+.logo span{color:var(--accent-mid)}
+.header-label{font-size:11px;font-weight:500;color:var(--gray-400);letter-spacing:.12em;text-transform:uppercase}
+.hero{max-width:760px;margin:0 auto;padding:72px 32px 56px;border-bottom:1px solid var(--gray-200)}
+.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-mid);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.hero-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--accent-mid)}
+.hero h1{font-family:'DM Serif Display',serif;font-size:clamp(32px,5vw,48px);line-height:1.1;color:var(--black);margin-bottom:20px;max-width:560px}
+.hero h1 em{font-style:italic;color:var(--gray-600)}
+.hero-desc{font-size:15px;color:var(--gray-600);max-width:480px;line-height:1.7;margin-bottom:28px}
+.hero-meta{display:flex;gap:28px;font-size:12px;color:var(--gray-400)}
+.hero-meta span{display:flex;align-items:center;gap:6px}
+.hero-meta span::before{content:'—'}
+.progress-wrap{max-width:760px;margin:0 auto;padding:28px 32px 0}
+.progress-bar-outer{height:2px;background:var(--gray-200);border-radius:1px;overflow:hidden;margin-bottom:10px}
+.progress-bar-inner{height:100%;background:var(--accent-mid);border-radius:1px;transition:width 400ms ease;width:0%}
+.progress-label{font-size:11px;color:var(--gray-400);letter-spacing:.05em}
+.form-wrap{max-width:760px;margin:0 auto;padding:0 32px 80px}
+.question-block{padding:40px 0;border-bottom:1px solid var(--gray-200);opacity:0;transform:translateY(16px);transition:opacity 400ms ease,transform 400ms ease;display:none}
+.question-block.visible{display:block}
+.question-block.animated{opacity:1;transform:translateY(0)}
+.q-number{font-size:11px;font-weight:500;color:var(--gray-400);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.q-text{font-family:'DM Serif Display',serif;font-size:22px;line-height:1.3;color:var(--black);margin-bottom:8px}
+.q-sub{font-size:13px;color:var(--gray-400);margin-bottom:28px}
+.options{display:flex;flex-direction:column;gap:10px}
+.option{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;border:1px solid var(--gray-200);border-radius:var(--radius);cursor:pointer;transition:border-color var(--t),background var(--t);position:relative;background:var(--white)}
+.option:hover{border-color:var(--gray-400)}
+.option.selected{border-color:var(--accent-mid);background:var(--accent-light)}
+.option input[type=radio]{display:none}
+.option-indicator{width:18px;height:18px;border:1px solid var(--gray-400);border-radius:50%;flex-shrink:0;margin-top:1px;transition:border-color var(--t);position:relative}
+.option-indicator::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);width:8px;height:8px;border-radius:50%;background:var(--accent-mid);transition:transform var(--t)}
+.option.selected .option-indicator{border-color:var(--accent-mid)}
+.option.selected .option-indicator::after{transform:translate(-50%,-50%) scale(1)}
+.option-content{flex:1}
+.option-label{font-size:14px;font-weight:500;color:var(--black);line-height:1.4}
+.option-desc{font-size:12px;color:var(--gray-600);margin-top:3px}
+.option-score{font-size:11px;font-weight:500;color:var(--gray-400);align-self:center;min-width:28px;text-align:right}
+.option.selected .option-score{color:var(--accent-mid)}
+.nav-row{display:flex;align-items:center;justify-content:space-between;margin-top:28px;gap:12px}
+.btn-back{font-size:13px;color:var(--gray-400);background:none;border:none;cursor:pointer;padding:10px 0;transition:color var(--t);font-family:'DM Sans',sans-serif}
+.btn-back:hover{color:var(--black)}
+.btn-next{font-size:13px;font-weight:500;color:var(--white);background:var(--black);border:none;cursor:pointer;padding:12px 28px;border-radius:var(--radius);transition:background var(--t),opacity var(--t);font-family:'DM Sans',sans-serif}
+.btn-next:hover{background:var(--gray-800)}
+.btn-next:disabled{opacity:.3;cursor:default}
+.btn-next.final{background:var(--accent)}
+.btn-next.final:hover{background:var(--accent-mid)}
+#results-section{display:none;max-width:760px;margin:0 auto;padding:60px 32px 100px}
+.result-header{padding-bottom:40px;border-bottom:1px solid var(--gray-200);margin-bottom:40px}
+.result-eyebrow{font-size:11px;font-weight:500;color:var(--gray-400);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
+.score-display{display:flex;align-items:baseline;gap:8px;margin-bottom:16px}
+.score-number{font-family:'DM Serif Display',serif;font-size:80px;line-height:1;color:var(--black)}
+.score-total{font-size:24px;color:var(--gray-400);font-family:'DM Serif Display',serif}
+.score-bar-wrap{height:6px;background:var(--gray-200);border-radius:3px;overflow:hidden;margin-bottom:24px;max-width:400px}
+.score-bar-fill{height:100%;border-radius:3px;transition:width 1200ms cubic-bezier(.16,1,.3,1);width:0%}
+.category-badge{display:inline-block;font-size:12px;font-weight:500;padding:6px 14px;border-radius:var(--radius);letter-spacing:.04em;text-transform:uppercase;margin-bottom:24px}
+.result-title{font-family:'DM Serif Display',serif;font-size:32px;line-height:1.2;color:var(--black);margin-bottom:16px}
+.analysis-block,.compare-block,.dimensions-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--gray-200)}
+.analysis-label{font-size:11px;font-weight:500;color:var(--gray-400);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
+.analysis-text{font-size:15px;color:var(--gray-800);line-height:1.8}
+.analysis-text p{margin-bottom:12px}
+.analysis-text p:last-child{margin-bottom:0}
+.analysis-text strong{color:var(--black);font-weight:500}
+.dim-row{display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--gray-200)}
+.dim-row:last-child{border-bottom:none}
+.dim-name{font-size:13px;color:var(--black);min-width:180px}
+.dim-bar-wrap{flex:1;height:4px;background:var(--gray-200);border-radius:2px;overflow:hidden}
+.dim-bar-fill{height:100%;border-radius:2px;transition:width 1000ms cubic-bezier(.16,1,.3,1);width:0%}
+.dim-score{font-size:12px;font-weight:500;color:var(--gray-600);min-width:32px;text-align:right}
+.cta-block{background:var(--black);border-radius:var(--radius);padding:40px;color:var(--white)}
+.cta-eyebrow{font-size:11px;font-weight:500;color:rgba(255,255,255,.4);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+.cta-title{font-family:'DM Serif Display',serif;font-size:26px;line-height:1.3;color:var(--white);margin-bottom:12px}
+.cta-sub{font-size:14px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:28px;max-width:420px}
+.cta-form{display:flex;gap:10px;flex-wrap:wrap}
+.cta-input{flex:1;min-width:200px;padding:12px 16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:var(--radius);color:var(--white);font-size:14px;font-family:'DM Sans',sans-serif;outline:none}
+.cta-input::placeholder{color:rgba(255,255,255,.3)}
+.cta-btn{padding:12px 24px;background:var(--white);color:var(--black);border:none;border-radius:var(--radius);font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.cta-btn:hover{opacity:.85}
+.cta-sent{display:none;font-size:14px;color:rgba(255,255,255,.7);padding:12px 0}
+.cta-note{font-size:11px;color:rgba(255,255,255,.25);margin-top:14px}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.compare-col{padding:20px;border-radius:var(--radius)}
+.compare-col.bad{background:var(--danger-light);border:1px solid #f0d0d0}
+.compare-col.good{background:var(--success-light);border:1px solid #c8dece}
+.compare-col-title{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.compare-col.bad .compare-col-title{color:var(--danger)}
+.compare-col.good .compare-col-title{color:var(--accent-mid)}
+.compare-item{font-size:12px;color:var(--gray-800);padding:6px 0;border-bottom:1px solid rgba(0,0,0,.06);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.compare-item:last-child{border-bottom:none}
+.compare-col.bad .compare-item::before{content:'×';color:var(--danger);font-weight:500;flex-shrink:0}
+.compare-col.good .compare-item::before{content:'✓';color:var(--accent-mid);font-weight:500;flex-shrink:0}
+@media(max-width:580px){.hero{padding:40px 20px 36px}.form-wrap{padding:0 20px 60px}.progress-wrap{padding:20px 20px 0}.header-inner{padding:0 20px}#results-section{padding:40px 20px 60px}.compare-grid{grid-template-columns:1fr}.cta-block{padding:28px 20px}.dim-name{min-width:120px;font-size:12px}.score-number{font-size:56px}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 500ms ease forwards}
+.fade-up-delay-1{animation-delay:100ms;opacity:0}
+.fade-up-delay-2{animation-delay:200ms;opacity:0}
+.fade-up-delay-3{animation-delay:320ms;opacity:0}
+.fade-up-delay-4{animation-delay:440ms;opacity:0}
+</style>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">Solution<span>Alternance</span></div>
+    <div class="header-label">Diagnostic 2025</div>
+  </div>
+</header>
+
+<section class="hero" id="hero-section">
+  <div class="hero-eyebrow">Baromètre de maturité digitale</div>
+  <h1>Où se situe <em>vraiment</em> votre école sur la gestion de l'alternance ?</h1>
+  <p class="hero-desc">8 questions. 3 minutes. Un score sur 100 et une analyse précise de votre niveau d'avancement face aux 4 200 écoles en alternance en France.</p>
+  <div class="hero-meta">
+    <span>8 questions</span>
+    <span>Résultat immédiat</span>
+    <span>Gratuit</span>
+  </div>
+</section>
+
+<div class="progress-wrap" id="progress-wrap" style="display:none">
+  <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar"></div></div>
+  <div class="progress-label" id="progress-label">Question 1 sur 8</div>
+</div>
+
+<div class="form-wrap" id="form-section">
+
+  <div class="question-block" id="q1">
+    <div class="q-number">Question 01 / 08</div>
+    <div class="q-text">Comment votre équipe suit-elle actuellement les étudiants en alternance ?</div>
+    <div class="q-sub">Suivi des visites, des évaluations, des alertes de rupture.</div>
+    <div class="options">
+      <label class="option" onclick="selectOption(this,'q1',0)"><input type="radio" name="q1"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Excel / tableaux partagés</div><div class="option-desc">Mise à jour manuelle, risque élevé d'oubli</div></div><div class="option-score">0 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q1',4)"><input type="radio" name="q1"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Logiciel généraliste (ERP, CRM non spécialisé)</div><div class="option-desc">Outil adapté mais non conçu pour l'alternance</div></div><div class="option-score">4 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q1',8)"><input type="radio" name="q1"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Solution spécialisée alternance, partiellement utilisée</div><div class="option-desc">Outil en place mais adoption incomplète</div></div><div class="option-score">8 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q1',12)"><input type="radio" name="q1"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Système automatisé avec alertes et tableaux de bord</div><div class="option-desc">Visibilité complète, aucun oubli possible</div></div><div class="option-score">12 pt</div></label>
+    </div>
+    <div class="nav-row"><span></span><button class="btn-next" id="next-q1" disabled onclick="nextQuestion(1)">Continuer →</button></div>
+  </div>
+
+  <div class="question-block" id="q2">
+    <div class="q-number">Question 02 / 08</div>
+    <div class="q-text">Comment se passe le matching étudiant ↔ entreprise chez vous ?</div>
+    <div class="q-sub">Processus de mise en relation et de sélection des offres.</div>
+    <div class="options">
+      <label class="option" onclick="selectOption(this,'q2',0)"><input type="radio" name="q2"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Manuel — l'équipe fait les rapprochements à la main</div><div class="option-desc">Basé sur la mémoire et les relations personnelles</div></div><div class="option-score">0 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q2',4)"><input type="radio" name="q2"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Liste d'offres diffusée aux étudiants sans filtrage</div><div class="option-desc">Les étudiants cherchent eux-mêmes dans un catalogue</div></div><div class="option-score">4 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q2',8)"><input type="radio" name="q2"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Filtrage partiel basé sur le secteur ou la localisation</div><div class="option-desc">Quelques critères de tri mais pas de scoring</div></div><div class="option-score">8 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q2',12)"><input type="radio" name="q2"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Matching automatisé multi-critères avec score de compatibilité</div><div class="option-desc">Algorithme prenant en compte compétences, localisation, profil</div></div><div class="option-score">12 pt</div></label>
+    </div>
+    <div class="nav-row"><button class="btn-back" onclick="prevQuestion(2)">← Retour</button><button class="btn-next" id="next-q2" disabled onclick="nextQuestion(2)">Continuer →</button></div>
+  </div>
+
+  <div class="question-block" id="q3">
+    <div class="q-number">Question 03 / 08</div>
+    <div class="q-text">Comment gérez-vous les relances auprès des entreprises partenaires ?</div>
+    <div class="q-sub">Prise de contact, renouvellement de partenariat, collecte de feedbacks.</div>
+    <div class="options">
+      <label class="option" onclick="selectOption(this,'q3',0)"><input type="radio" name="q3"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Pas de processus structuré — au cas par cas</div><div class="option-desc">Risque élevé de perte d'entreprises partenaires</div></div><div class="option-score">0 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q3',4)"><input type="radio" name="q3"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Relances planifiées dans un agenda ou rappels manuels</div><div class="option-desc">Dépend de la rigueur individuelle de chaque chargé de relation</div></div><div class="option-score">4 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q3',8)"><input type="radio" name="q3"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Séquences partiellement automatisées (email seulement)</div><div class="option-desc">Certaines relances partent automatiquement, pas toutes</div></div><div class="option-score">8 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q3',12)"><input type="radio" name="q3"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Séquences automatisées multicanal avec suivi des taux de réponse</div><div class="option-desc">Aucune entreprise ne tombe dans l'oubli</div></div><div class="option-score">12 pt</div></label>
+    </div>
+    <div class="nav-row"><button class="btn-back" onclick="prevQuestion(3)">← Retour</button><button class="btn-next" id="next-q3" disabled onclick="nextQuestion(3)">Continuer →</button></div>
+  </div>
+
+  <div class="question-block" id="q4">
+    <div class="q-number">Question 04 / 08</div>
+    <div class="q-text">Quel est votre taux de placement estimé en alternance pour la dernière promotion ?</div>
+    <div class="q-sub">Pourcentage d'étudiants ayant trouvé une entreprise avant la rentrée.</div>
+    <div class="options">
+      <label class="option" onclick="selectOption(this,'q4',0)"><input type="radio" name="q4"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Moins de 70%</div><div class="option-desc">Un nombre significatif d'étudiants non placés à temps</div></div><div class="option-score">0 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q4',4)"><input type="radio" name="q4"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Entre 70% et 82%</div><div class="option-desc">Dans la moyenne nationale</div></div><div class="option-score">4 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q4',8)"><input type="radio" name="q4"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Entre 83% et 92%</div><div class="option-desc">Au-dessus de la moyenne</div></div><div class="option-score">8 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q4',12)"><input type="radio" name="q4"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Plus de 93%</div><div class="option-desc">Dans le top 15% des écoles françaises</div></div><div class="option-score">12 pt</div></label>
+    </div>
+    <div class="nav-row"><button class="btn-back" onclick="prevQuestion(4)">← Retour</button><button class="btn-next" id="next-q4" disabled onclick="nextQuestion(4)">Continuer →</button></div>
+  </div>
+
+  <div class="question-block" id="q5">
+    <div class="q-number">Question 05 / 08</div>
+    <div class="q-text">Disposez-vous d'un tableau de bord en temps réel sur l'état de vos alternants ?</div>
+    <div class="q-sub">Visibilité instantanée sur qui est placé, qui est en difficulté, qui nécessite une intervention.</div>
+    <div class="options">
+      <label class="option" onclick="selectOption(this,'q5',0)"><input type="radio" name="q5"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Non — les données sont éparpillées, pas de vue globale</div><div class="option-desc">Impossible d'avoir une vision consolidée rapidement</div></div><div class="option-score">0 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q5',4)"><input type="radio" name="q5"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Un reporting mensuel ou trimestriel consolidé à la main</div><div class="option-desc">Vue existante mais en décalage avec la réalité</div></div><div class="option-score">4 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q5',8)"><input type="radio" name="q5"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Un tableau de bord semi-automatique, mis à jour régulièrement</div><div class="option-desc">Bonne visibilité mais avec délai de mise à jour</div></div><div class="option-score">8 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q5',12)"><input type="radio" name="q5"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Tableau de bord temps réel avec alertes automatiques</div><div class="option-desc">Zéro angle mort — chaque situation anormale est détectée immédiatement</div></div><div class="option-score">12 pt</div></label>
+    </div>
+    <div class="nav-row"><button class="btn-back" onclick="prevQuestion(5)">← Retour</button><button class="btn-next" id="next-q5" disabled onclick="nextQuestion(5)">Continuer →</button></div>
+  </div>
+
+  <div class="question-block" id="q6">
+    <div class="q-number">Question 06 / 08</div>
+    <div class="q-text">Combien de temps votre équipe consacre-t-elle aux tâches administratives liées à l'alternance chaque semaine ?</div>
+    <div class="q-sub">Relances, mise à jour des fichiers, rapports, coordination.</div>
+    <div class="options">
+      <label class="option" onclick="selectOption(this,'q6',0)"><input type="radio" name="q6"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Plus de 15 heures par semaine</div><div class="option-desc">L'administratif mobilise la majorité du temps de l'équipe</div></div><div class="option-score">0 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q6',4)"><input type="radio" name="q6"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Entre 8 et 15 heures</div><div class="option-desc">Charge lourde qui empiète sur les activités à valeur ajoutée</div></div><div class="option-score">4 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q6',8)"><input type="radio" name="q6"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Entre 3 et 8 heures</div><div class="option-desc">Quelques automatisations en place, optimisation possible</div></div><div class="option-score">8 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q6',12)"><input type="radio" name="q6"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Moins de 3 heures</div><div class="option-desc">L'essentiel est automatisé, l'équipe se concentre sur l'humain</div></div><div class="option-score">12 pt</div></label>
+    </div>
+    <div class="nav-row"><button class="btn-back" onclick="prevQuestion(6)">← Retour</button><button class="btn-next" id="next-q6" disabled onclick="nextQuestion(6)">Continuer →</button></div>
+  </div>
+
+  <div class="question-block" id="q7">
+    <div class="q-number">Question 07 / 08</div>
+    <div class="q-text">Vos entreprises partenaires ont-elles un espace dédié pour suivre leurs alternants ?</div>
+    <div class="q-sub">Portail entreprise, accès aux évaluations, communication directe avec l'école.</div>
+    <div class="options">
+      <label class="option" onclick="selectOption(this,'q7',0)"><input type="radio" name="q7"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Non — tout passe par email et téléphone</div><div class="option-desc">Friction élevée, perte d'information fréquente</div></div><div class="option-score">0 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q7',4)"><input type="radio" name="q7"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Un simple formulaire ou email standardisé</div><div class="option-desc">Communication structurée mais sans espace dédié</div></div><div class="option-score">4 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q7',8)"><input type="radio" name="q7"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Un extranet basique (accès limité aux documents)</div><div class="option-desc">Espace existant mais fonctionnalités restreintes</div></div><div class="option-score">8 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q7',12)"><input type="radio" name="q7"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Portail entreprise complet avec suivi, évaluations et messagerie</div><div class="option-desc">Expérience partenaire fluide, fidélisation renforcée</div></div><div class="option-score">12 pt</div></label>
+    </div>
+    <div class="nav-row"><button class="btn-back" onclick="prevQuestion(7)">← Retour</button><button class="btn-next" id="next-q7" disabled onclick="nextQuestion(7)">Continuer →</button></div>
+  </div>
+
+  <div class="question-block" id="q8">
+    <div class="q-number">Question 08 / 08</div>
+    <div class="q-text">Comment évaluez-vous la satisfaction des étudiants et des entreprises sur l'expérience alternance ?</div>
+    <div class="q-sub">Collecte de feedback, NPS, suivi de la satisfaction globale.</div>
+    <div class="options">
+      <label class="option" onclick="selectOption(this,'q8',0)"><input type="radio" name="q8"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Pas de mesure formelle — retours informels uniquement</div><div class="option-desc">Aucune donnée exploitable pour s'améliorer</div></div><div class="option-score">0 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q8',4)"><input type="radio" name="q8"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Enquête annuelle envoyée manuellement</div><div class="option-desc">Données disponibles mais peu actionnables en temps réel</div></div><div class="option-score">4 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q8',8)"><input type="radio" name="q8"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Enquêtes régulières (trimestrielles) avec analyse des résultats</div><div class="option-desc">Bonne visibilité, amélioration continue possible</div></div><div class="option-score">8 pt</div></label>
+      <label class="option" onclick="selectOption(this,'q8',12)"><input type="radio" name="q8"><div class="option-indicator"></div><div class="option-content"><div class="option-label">Mesure continue automatisée avec alertes en cas d'insatisfaction</div><div class="option-desc">Détection proactive des problèmes avant qu'ils deviennent critiques</div></div><div class="option-score">12 pt</div></label>
+    </div>
+    <div class="nav-row"><button class="btn-back" onclick="prevQuestion(8)">← Retour</button><button class="btn-next final" id="next-q8" disabled onclick="showResults()">Voir mon diagnostic →</button></div>
+  </div>
+
+</div>
+
+<section id="results-section">
+  <div class="result-header fade-up">
+    <div class="result-eyebrow">Résultats du diagnostic</div>
+    <div class="score-display"><div class="score-number" id="score-display">0</div><div class="score-total">/ 100</div></div>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="score-bar-fill"></div></div>
+    <div class="category-badge" id="category-badge"></div>
+    <div class="result-title" id="result-title"></div>
+  </div>
+  <div class="analysis-block fade-up fade-up-delay-1">
+    <div class="analysis-label">Analyse personnalisée</div>
+    <div class="analysis-text" id="analysis-text"></div>
+  </div>
+  <div class="compare-block fade-up fade-up-delay-2">
+    <div class="analysis-label">Ce que ca change concrètement</div>
+    <div class="compare-grid">
+      <div class="compare-col bad">
+        <div class="compare-col-title">Sans automatisation</div>
+        <div class="compare-item">2 à 4 semaines de retard au placement</div>
+        <div class="compare-item">15 à 30% des entreprises non relancées</div>
+        <div class="compare-item">12 à 20h/semaine perdues en administratif</div>
+        <div class="compare-item">Oublis et angles morts non détectés</div>
+        <div class="compare-item">Expérience partenaire dégradée</div>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-col-title">Avec automatisation</div>
+        <div class="compare-item">Placement accéléré de 18 jours en moyenne</div>
+        <div class="compare-item">100% des entreprises relancées au bon moment</div>
+        <div class="compare-item">Moins de 3h/semaine d'administratif résiduel</div>
+        <div class="compare-item">Alertes automatiques sur chaque situation à risque</div>
+        <div class="compare-item">Portail entreprise = fidélisation renforcée</div>
+      </div>
+    </div>
+  </div>
+  <div class="dimensions-block fade-up fade-up-delay-3">
+    <div class="analysis-label">Votre profil par dimension</div>
+    <div id="dimensions-list"></div>
+  </div>
+  <div class="cta-block fade-up fade-up-delay-4">
+    <div class="cta-eyebrow">Prochaine étape</div>
+    <div class="cta-title" id="cta-title">Découvrez comment passer au niveau supérieur en 30 jours.</div>
+    <p class="cta-sub">Nous vous préparons une analyse approfondie et un plan d'action personnalisé. Démonstration gratuite, sans engagement.</p>
+    <div class="cta-form" id="cta-form">
+      <input class="cta-input" type="email" id="cta-email" placeholder="votre@email.fr">
+      <input class="cta-input" type="text" id="cta-name" placeholder="Votre école" style="min-width:160px;flex:0.8">
+      <button class="cta-btn" onclick="submitCTA()">Demander une démo</button>
+    </div>
+    <div class="cta-sent" id="cta-sent">Merci — nous vous contactons dans les 24h pour organiser votre démonstration.</div>
+    <p class="cta-note">Aucun engagement. Démonstration de 20 minutes par visio.</p>
+  </div>
+</section>
+
+<script>
+var SA={answers:{},currentQ:1};
+var dimNames=['Suivi des alternants','Matching etudiant/entreprise','Relances partenaires','Taux de placement','Tableau de bord','Charge administrative','Espace entreprise','Mesure satisfaction'];
+
+function selectOption(el,qId,score){
+  var block=document.getElementById(qId);
+  var opts=block.querySelectorAll('.option');
+  for(var i=0;i<opts.length;i++) opts[i].classList.remove('selected');
+  el.classList.add('selected');
+  SA.answers[qId]=score;
+  var btn=document.getElementById('next-'+qId);
+  if(btn) btn.disabled=false;
+}
+
+function showQuestion(n){
+  document.getElementById('progress-wrap').style.display='block';
+  document.getElementById('hero-section').style.display='none';
+  for(var i=1;i<=8;i++){
+    var b=document.getElementById('q'+i);
+    b.classList.remove('visible','animated');
+    b.style.display='none';
+  }
+  var block=document.getElementById('q'+n);
+  block.style.display='block';
+  block.classList.add('visible');
+  setTimeout(function(){block.classList.add('animated');},20);
+  SA.currentQ=n;
+  document.getElementById('progress-bar').style.width=(((n-1)/8)*100)+'%';
+  document.getElementById('progress-label').textContent='Question '+n+' sur 8';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function nextQuestion(n){
+  if(SA.answers['q'+n]===undefined) return;
+  if(n<8) showQuestion(n+1);
+}
+
+function prevQuestion(n){
+  if(n>1) showQuestion(n-1);
+}
+
+function computeScore(){
+  var total=0;
+  for(var i=1;i<=8;i++) total+=(SA.answers['q'+i]||0);
+  return Math.round((total/96)*100);
+}
+
+function getCategory(score){
+  if(score>=78) return {key:'pioneer',label:'Ecole Pionniere',color:'#1a3a2a',bg:'#e8f0eb',title:'Votre ecole fait partie des 8% les plus avancees de France.',barColor:'#4a7c5e'};
+  if(score>=52) return {key:'advanced',label:'Ecole Avancee',color:'#0c447c',bg:'#e6f1fb',title:'Vous etes au-dessus de la moyenne nationale. Quelques points critiques a corriger.',barColor:'#378add'};
+  if(score>=28) return {key:'transition',label:'En Transition',color:'#7a5500',bg:'#fdf6e8',title:"Votre ecole amorce sa transformation. Les bases existent, l'acceleration est possible.",barColor:'#ef9f27'};
+  return {key:'behind',label:'A la Traine',color:'#8b2020',bg:'#fdf0f0',title:"Votre gestion actuelle vous expose a des pertes d'etudiants et d'entreprises partenaires.",barColor:'#e24b4a'};
+}
+
+function getAnalysis(cat){
+  var a={
+    pioneer:"<p>Votre ecole a compris avant les autres que l'alternance se gere comme un systeme, pas comme une serie de taches manuelles. Vous disposez d'une infrastructure digitale qui vous donne un avantage structurel sur vos concurrents.</p><p><strong>Ce qui vous distingue :</strong> votre equipe consacre son energie a des decisions a haute valeur ajoutee plutot qu'a de l'administration. Vos etudiants sont mieux places, plus vite.</p><p><strong>L'enjeu maintenant :</strong> transformer cet avantage operationnel en avantage competitif visible. Les ecoles qui communiquent sur leur maturite digitale attirent des etudiants et des entreprises de meilleure qualite.</p><p><strong>Notre recommandation :</strong> decouvrez comment les ecoles pionnieres amplifient leur avantage pour creuser l'ecart definitivement.</p>",
+    advanced:"<p>Vous avez deja fait le chemin le plus difficile : vous avez compris le probleme et commence a le resoudre. Votre ecole est au-dessus de la moyenne nationale, mais l'ecart avec les pionnieres se creuse chaque annee.</p><p><strong>Vos forces :</strong> certains processus cles sont automatises, votre equipe a une vision assez claire de l'etat de vos alternants.</p><p><strong>Vos angles morts :</strong> il reste probablement des zones ou l'information est dispersee, des relances qui tombent entre les mailles, des entreprises partenaires non suivies correctement.</p><p><strong>Notre recommandation :</strong> identifier precisement les 2 ou 3 points de friction qui limitent votre performance et les eliminer en moins de 30 jours.</p>",
+    transition:"<p>Votre ecole est dans une position charniere. Vous avez des outils, peut-etre meme une culture du suivi, mais la gestion reste majoritairement manuelle. Chaque semaine, des etudiants passent au travers des mailles.</p><p><strong>Le risque immediat :</strong> les ecoles qui automatisent aujourd'hui crееront un ecart de performance d'ici 18 mois tres difficile a combler.</p><p><strong>Ce que revele votre score :</strong> vous n'etes pas loin. Avec les bons outils, vous pouvez remonter de 25 a 35 points sur ce barometre en quelques mois.</p><p><strong>Notre recommandation :</strong> voyez concretement ce que 30 jours d'accompagnement changent sur vos resultats. La demonstration prend 20 minutes.</p>",
+    behind:"<p>Votre score revele une gestion encore tres manuelle qui vous expose a des risques concrets et immediats. C'est la realite de la majorite des CFA et ecoles privees en France aujourd'hui, mais le marche est en train de se diviser.</p><p><strong>Ce que votre score signifie :</strong> votre equipe perd probablement entre 12 et 20 heures par semaine en taches repetitives. Des entreprises partenaires partent chaque annee faute de suivi.</p><p><strong>La fenetre d'opportunite :</strong> vous pouvez encore rattraper le retard. Les outils existent et l'impact est visible des les premieres semaines.</p><p><strong>Notre recommandation :</strong> ne pas attendre. Chaque mois supplementaire en mode manuel est un mois de retard sur vos concurrents qui, eux, avancent.</p>"
+  };
+  return a[cat.key];
+}
+
+function animateScore(target){
+  var el=document.getElementById('score-display');
+  var current=0;
+  var step=target/(1400/16);
+  var timer=setInterval(function(){
+    current=Math.min(current+step,target);
+    el.textContent=Math.round(current);
+    if(current>=target) clearInterval(timer);
+  },16);
+}
+
+function showResults(){
+  if(SA.answers['q8']===undefined) return;
+  document.getElementById('form-section').style.display='none';
+  document.getElementById('progress-wrap').style.display='none';
+  var score=computeScore();
+  var cat=getCategory(score);
+  var res=document.getElementById('results-section');
+  res.style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(function(){
+    animateScore(score);
+    var bar=document.getElementById('score-bar-fill');
+    bar.style.background=cat.barColor;
+    setTimeout(function(){bar.style.width=score+'%';},100);
+    var badge=document.getElementById('category-badge');
+    badge.textContent=cat.label;
+    badge.style.background=cat.bg;
+    badge.style.color=cat.color;
+    document.getElementById('result-title').textContent=cat.title;
+    document.getElementById('analysis-text').innerHTML=getAnalysis(cat);
+    var dl=document.getElementById('dimensions-list');
+    dl.innerHTML='';
+    for(var i=1;i<=8;i++){
+      var pts=SA.answers['q'+i]||0;
+      var pct=Math.round((pts/12)*100);
+      var color=pct>=66?'#4a7c5e':pct>=33?'#ef9f27':'#e24b4a';
+      dl.innerHTML+='<div class="dim-row"><div class="dim-name">'+dimNames[i-1]+'</div><div class="dim-bar-wrap"><div class="dim-bar-fill" id="dim-'+i+'" style="background:'+color+';width:0%"></div></div><div class="dim-score">'+pts+'/12</div></div>';
+    }
+    setTimeout(function(){
+      for(var i=1;i<=8;i++){
+        var pts=SA.answers['q'+i]||0;
+        var pct=Math.round((pts/12)*100);
+        var d=document.getElementById('dim-'+i);
+        if(d) d.style.width=pct+'%';
+      }
+    },200);
+    var ctaTitles={pioneer:'Transformez votre avantage operationnel en avantage competitif visible.',advanced:'Identifiez et eliminez vos 2-3 points de friction en 30 jours.',transition:'Voyez concretement ce que 30 jours changent sur vos resultats.',behind:'Decouvrez comment rattraper le retard avant la prochaine rentree.'};
+    document.getElementById('cta-title').textContent=ctaTitles[cat.key];
+  },100);
+}
+
+function submitCTA(){
+  var email=document.getElementById('cta-email').value.trim();
+  if(!email){document.getElementById('cta-email').focus();return;}
+  document.getElementById('cta-form').style.display='none';
+  document.getElementById('cta-sent').style.display='block';
+}
+
+showQuestion(1);
+</script>
