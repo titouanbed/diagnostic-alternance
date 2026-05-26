@@ -413,9 +413,28 @@ function showResults(){
 
 function submitCTA(){
   var email=document.getElementById('cta-email').value.trim();
+  var name=document.getElementById('cta-name').value.trim();
   if(!email){document.getElementById('cta-email').focus();return;}
-  document.getElementById('cta-form').style.display='none';
-  document.getElementById('cta-sent').style.display='block';
+  var score=computeScore();
+  var cat=getCategory(score);
+  fetch('https://formspree.io/f/mgoqnjng',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({
+      email:email,
+      ecole:name,
+      score:score,
+      categorie:cat.label,
+      source:'diagnostic.solutionalternance.fr'
+    })
+  }).then(function(){
+    document.getElementById('cta-form').style.display='none';
+    document.getElementById('cta-sent').style.display='block';
+    if(typeof gtag!=='undefined') gtag('event','demo_request',{score:score});
+  }).catch(function(){
+    document.getElementById('cta-form').style.display='none';
+    document.getElementById('cta-sent').style.display='block';
+  });
 }
 
 showQuestion(1);
